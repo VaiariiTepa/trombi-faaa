@@ -124,6 +124,14 @@
         .profile-card h3 {
             font-size: 1.25rem;
             font-weight: 600;
+            color: #333;
+            /* Couleur sombre par défaut pour le mode clair */
+        }
+
+        /* Styles spécifiques pour le mode sombre */
+        .dark-mode .profile-card h3 {
+            color: #e0e0e0;
+            /* Couleur claire pour le mode sombre */
         }
 
         .profile-card p {
@@ -339,6 +347,7 @@
             .profile-card h3,
             .profile-card p {
                 white-space: normal;
+
             }
         }
     </style>
