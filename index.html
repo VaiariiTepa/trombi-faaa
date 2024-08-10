@@ -437,7 +437,7 @@
                     <i class="material-icons-round">dark_mode</i>
                 </button>
                 <button id="downloadPDF" class="col rounded-pill btn btn-outline-light" "> 
-                    <i class="material-icons-round">picture_as_pdf</i>
+                    <i class=" material-icons-round">picture_as_pdf</i>
                 </button>
             </div>
         </div>
@@ -525,7 +525,7 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>  
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -722,95 +722,86 @@
         // Appeler la fonction pour mettre à jour la météo au chargement de la page
         updateWeather();
 
-// Gestion du téléchargement PDF (nouvelle approche améliorée)
-const downloadPDFBtn = document.getElementById('downloadPDF');
-downloadPDFBtn.addEventListener('click', () => {
-    // Récupère toutes les cartes de profil visibles
-    const profileCards = trombinoscope.querySelectorAll('.profile-card:not(.fade-leave-to)'); 
+        // Gestion du téléchargement PDF (amélioré)
+        const downloadPDFBtn = document.getElementById('downloadPDF');
+        downloadPDFBtn.addEventListener('click', () => {
+            // Récupère toutes les cartes de profil visibles
+            const profileCards = trombinoscope.querySelectorAll('.profile-card:not(.fade-leave-to)');
 
-    // Crée une nouvelle fenêtre avec le contenu du trombinoscope
-    const newWindow = window.open('', '', 'width=800,height=600'); // Ajuste les dimensions si nécessaire
+            // Crée une nouvelle fenêtre avec le contenu du trombinoscope
+            const newWindow = window.open('', '', 'width=800,height=600');
 
-    // Construit le contenu HTML du PDF en utilisant les cartes de profil
-    let pdfContent = `
-        <html>
-        <head>
-            <title>Trombinoscope</title>
-            <style>
-                /* Copiez ici les styles CSS essentiels pour la mise en page du trombinoscope */
-                body { background-image: url('mairie.jpeg'); background-position: center; background-size: 100% auto; background-repeat: repeat; font-family: 'Hind Siliguri', sans-serif; } /* Ajoute la police Hind Siliguri */
-                .profile-card { 
-                    text-align: center; 
-                    padding: 15px; 
-                    background-image: url('bande.jpg'); 
-                    background-position: top center; 
-                    background-size: contain; 
-                    background-repeat: no-repeat; 
-                    width: calc(100% / 6 - 12px); /* 6 colonnes avec un espacement de 6px */
-                    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur */
-                    margin: 6px; /* Espacement entre les cartes */
+            // Construit le contenu HTML du PDF en utilisant les cartes de profil
+            let pdfContent = `
+                <html>
+                <head>
+                    <title>Trombinoscope</title>
+                    <style>
+                        body {
+                            background-image: url('mairie.jpeg'); /* Image de fond pour le PDF */
+                            background-size: cover; /* Couvre tout l'arrière-plan */
+                            background-repeat: no-repeat;
+                        }
+                        .profile-card { 
+                            text-align: center; 
+                            padding: 15px; 
+                            width: calc(100% / 6 - 12px);
+                            box-sizing: border-box; 
+                            margin: 6px; 
 
-                    /* Styles pour les bordures */
-                    border-radius: 20px; /* Coins arrondis */
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
-                    background-color: #f8f9faab; /* Couleur de fond */
-                    color: #1f1f1f; /* Couleur du texte */
-                    transition: transform 0.3s ease-in-out; /* Transition pour l'effet hover (si nécessaire) */
+                            border-radius: 20px; 
+                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+                            background-color: #f8f9faab; 
+                            color: #1f1f1f; 
+                            transition: transform 0.3s ease-in-out;
 
-                    /* IMPORTANT : Appliquer le border-radius à l'image de fond */
-                    overflow: hidden; /* Cache le débordement de l'image de fond */
-                }
-                .profile-card::before { /* Pseudo-élément pour l'image de fond */
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-image: inherit; /* Hérite de l'image de fond de .profile-card */
-                    background-size: cover;
-                    background-position: center;
-                    z-index: -1; /* Place l'image de fond derrière le contenu */
-                    border-radius: inherit; /* Hérite du border-radius de .profile-card */
-                }
+                            position: relative; /* Pour positionner l'image de fond */
+                            overflow: hidden; 
+                        }
+                        .profile-card::before { 
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 50px; /* Ajustez la hauteur de la bande selon vos besoins */
+                            background-image: url('bande.jpg'); 
+                            background-size: cover;
+                            background-position: center;
+                            z-index: -1; 
+                        }
 
-                .profile-card img { width: 100%; border-radius: 50%; margin-bottom: 10px; }
-                .profile-card h3 { font-size: 1.25rem; font-weight: 600; }
-                .profile-card p { font-size: 0.875rem; color: #6c757d; }
+                        .profile-card img { width: 100%; border-radius: 50%; margin-bottom: 10px; }
+                        .profile-card h3 { font-size: 1.25rem; font-weight: 600; }
+                        .profile-card p { font-size: 0.875rem; color: #6c757d; }
 
-                /* Styles pour forcer l'affichage de l'image et des informations de profil */
-                .profile-card .profile-image { opacity: 1 !important; } 
-                .profile-card .profile-info { opacity: 1 !important; }
-                .profile-card video { display: none !important; } /* Masquer les vidéos */
+                        .profile-card .profile-image { opacity: 1 !important; } 
+                        .profile-card .profile-info { opacity: 1 !important; }
+                        .profile-card video { display: none !important; } 
 
-                /* ... autres styles nécessaires ... */
-            </style>
-        </head>
-        <body>
-            <div style="display: flex; flex-wrap: wrap;"> 
-    `;
+                        /* ... autres styles nécessaires ... */
+                    </style>
+                </head>
+                <body>
+                    <div style="display: flex; flex-wrap: wrap;"> 
+            `;
 
-    profileCards.forEach(card => {
-        // Supprime la balise <video> avant d'ajouter la carte au contenu du PDF
-        const cardWithoutVideo = card.cloneNode(true); 
-        cardWithoutVideo.querySelector('video')?.remove();
-        pdfContent += cardWithoutVideo.outerHTML; 
-    });
+            profileCards.forEach(card => {
+                const cardWithoutVideo = card.cloneNode(true);
+                cardWithoutVideo.querySelector('video')?.remove();
+                pdfContent += cardWithoutVideo.outerHTML;
+            });
 
-    pdfContent += `</div></body></html>`;
+            pdfContent += `</div></body></html>`;
 
-    newWindow.document.write(pdfContent);
-
-    // Imprime le contenu de la nouvelle fenêtre
-    newWindow.print();
+            newWindow.document.write(pdfContent);
+            newWindow.print();
+        });
 
 
+        // Ferme la nouvelle fenêtre après l'impression (facultatif)
+        newWindow.close();
 
-
-
-    // Ferme la nouvelle fenêtre après l'impression (facultatif)
-    // newWindow.close();
-});
     </script>
 </body>
 
