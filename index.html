@@ -40,22 +40,30 @@
             background-color: #dddddda9;
             font-weight: bold;
         }
+
         .category-btn {
-  /* ... autres styles ... */
-  white-space: nowrap; /* Empêche toujours le retour à la ligne */
-  overflow: hidden;      /* Cache le texte qui déborde */
-  text-overflow: ellipsis; /* Ajoute des points de suspension si nécessaire */
+            /* ... autres styles ... */
+            white-space: nowrap;
+            /* Empêche toujours le retour à la ligne */
+            overflow: hidden;
+            /* Cache le texte qui déborde */
+            text-overflow: ellipsis;
+            /* Ajoute des points de suspension si nécessaire */
 
-  /* Classes Bootstrap pour la taille de texte réactive */
-  font-size: 1rem;  /* Taille par défaut */
-  text-break: ellipsis; /* Pour les navigateurs qui ne supportent pas text-overflow */
-}
+            /* Classes Bootstrap pour la taille de texte réactive */
+            font-size: 1rem;
+            /* Taille par défaut */
+            text-break: ellipsis;
+            /* Pour les navigateurs qui ne supportent pas text-overflow */
+        }
 
-@media (max-width: 576px) { /* Pour les très petits écrans */
-  .category-btn {
-    font-size: 0.8rem; 
-  }
-}
+        @media (max-width: 576px) {
+
+            /* Pour les très petits écrans */
+            .category-btn {
+                font-size: 0.8rem;
+            }
+        }
 
         .title_page {
             color: #333;
@@ -92,8 +100,13 @@
         }
 
         .dark-mode .card {
-            background-color: #1f1f1f;
+            background-color: #1f1f1f86;
             color: #e0e0e0;
+        }
+
+        .dark-mode .profile-card p {
+            color: #e0e0e0;
+            /* Ou une autre couleur claire appropriée pour le mode sombre */
         }
 
         .material-icons-round {
@@ -278,6 +291,7 @@
             .weather-card-pc {
                 display: none;
             }
+
             .title-page {
                 display: none;
             }
