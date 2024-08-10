@@ -525,14 +525,14 @@
             filteredProfiles.forEach((profile, i) => {
                 const card = `
             <div class="card profile-card relative overflow-hidden" key="${i}">
-                <img src="img/${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300">
+                <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300">
                 
                 <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
                     <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 truncate whitespace-nowrap">${profile.name}</h3>
                     <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
                 </div>
                 <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" muted loop>
-                    <source src="video/${profile.video}" type="video/mp4"> 
+                    <source src="${profile.video}" type="video/mp4"> 
                     Your browser does not support the video tag.
                 </video>
             </div>
