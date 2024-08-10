@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trombinoscope Personnalisé</title>
+    <title>Trombi-Faaa</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -96,7 +96,7 @@
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            background-image: url('meteo.jpg');
+            background-image: url('img/meteo.jpg');
             /* Remplacez par votre image */
             background-size: cover;
         }
@@ -152,7 +152,7 @@
         .profile-card {
             text-align: center;
             padding: 15px;
-            background-image: url('bande.jpg');
+            background-image: url('img/bande.jpg');
             /* Remplacez par le chemin correct */
             background-position: top center;
             /* Position en haut et centrée */
@@ -173,7 +173,7 @@
         }
 
         .calendar-card {
-            background-image: url('calendrier.jpg');
+            background-image: url('img/calendrier.jpg');
             /* Remplacez par votre image */
             position: relative;
             background-size: cover;
@@ -325,7 +325,7 @@
         }
 
         body {
-            background-image: url('mairie.jpeg');
+            background-image: url('img/mairie.jpeg');
             background-position: center;
             background-size: 100% auto;
             /* Redimensionne l'image pour que sa largeur remplisse l'écran, conserve la hauteur d'origine */
@@ -525,14 +525,14 @@
             filteredProfiles.forEach((profile, i) => {
                 const card = `
             <div class="card profile-card relative overflow-hidden" key="${i}">
-                <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300">
+                <img src="img/${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300">
                 
                 <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
                     <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 truncate whitespace-nowrap">${profile.name}</h3>
                     <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
                 </div>
                 <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" muted loop>
-                    <source src="${profile.video}" type="video/mp4"> 
+                    <source src="video/${profile.video}" type="video/mp4"> 
                     Your browser does not support the video tag.
                 </video>
             </div>
