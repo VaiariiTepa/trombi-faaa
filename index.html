@@ -36,8 +36,8 @@
         }
 
         .category-btn {
-            color: #333;
-            background-color: #dddddda9;
+            color: #5e5d5d;
+            background-color: #ffffffa9;
             font-weight: bold;
         }
 
@@ -319,7 +319,7 @@
 
         /* Style Google Agenda pour le calendrier */
         .calendar-card {
-            background-color: #ffffff8e;
+            background-color: #d2d2d28e;
             /* Fond blanc */
             border: 1px solid #ddd;
             /* Bordure subtile */
@@ -387,6 +387,19 @@
             to {
                 background-position: top center;
             }
+        }
+
+        .dark-mode::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            /* Voile noir avec 50% d'opacité */
+            z-index: -1;
+            /* Place le voile derrière tous les autres éléments */
         }
     </style>
 </head>
@@ -511,7 +524,7 @@
         // Données du trombinoscope 
         const profiles = [
             { name: "Jean Dupont", job: "Développeur Web", photo: "contact1.jpg", category: "developpement", video: "coucou.mp4" },
-            { name: "Benjamin Curie", job: "Responsable Marketing", photo: "contact2.jpg", category: "marketing", video: "coucou2.mp4"  },
+            { name: "Benjamin Curie", job: "Responsable Marketing", photo: "contact2.jpg", category: "marketing", video: "coucou2.mp4" },
             { name: "Alex Martin", job: "Spécialiste RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
             { name: "Sophie Lefebvre", job: "Développeuse Front-end", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
             { name: "Pierre Dubois", job: "Analyste Marketing", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
