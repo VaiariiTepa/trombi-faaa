@@ -34,16 +34,16 @@
         .category-btn:hover {
             background-color: #dddddd;
         }
-        
+
         .category-btn {
             color: #333;
             background-color: #dddddda9;
-            font-weight: bold; 
+            font-weight: bold;
         }
 
-        .title_page{
+        .title_page {
             color: #333;
-            font-weight: bold; 
+            font-weight: bold;
         }
 
 
@@ -484,7 +484,7 @@
 
         // Données du trombinoscope 
         const profiles = [
-            { name: "Jean Dupont", job: "Développeur Web", photo: "contact1.jpg", category: "developpement", video: "coucou.webm" },
+            { name: "Jean Dupont", job: "Développeur Web", photo: "contact1.jpg", category: "developpement", video: "coucou.mp4" },
             { name: "Marie Curie", job: "Responsable Marketing", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
             { name: "Alex Martin", job: "Spécialiste RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
             { name: "Sophie Lefebvre", job: "Développeuse Front-end", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
@@ -524,21 +524,24 @@
             trombinoscope.innerHTML = '';
             filteredProfiles.forEach((profile, i) => {
                 const card = `
-            <div class="card profile-card relative overflow-hidden" key="${i}">
-                <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300">
-                
-                <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
-                    <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 truncate whitespace-nowrap">${profile.name}</h3>
-                    <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
-                </div>
-                <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" muted loop>
-                    <source src="${profile.video}" type="video/mp4"> 
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        `;
+                    <div class="card profile-card relative overflow-hidden" key="${i}">
+                        <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300">
+
+                        <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
+                            <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 truncate whitespace-nowrap">${profile.name}</h3>
+                            <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
+                        </div>
+                        ${profile.video ? `
+                        <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" muted loop>
+                            <source src="${profile.video}" type="video/mp4"> 
+                            Your browser does not support the video tag.
+                        </video>
+                        ` : ''} 
+                    </div>
+                    `;
                 trombinoscope.innerHTML += card;
             });
+
 
             // Ajouter les écouteurs d'événements après le chargement des profils
             const profileCards = document.querySelectorAll('.profile-card');
@@ -566,7 +569,7 @@
                 });
             });
 
-            window.dispatchEvent(new Event('resize'));
+            // window.dispatchEvent(new Event('resize'));
         }
 
         // Charger tous les profils initiaux
@@ -637,7 +640,7 @@
 
             const response = await fetch(url);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             // Mettre à jour les éléments de la carte météo
             // document.querySelector('.temperature').textContent = Math.round(data.current_weather.temperature) + '°C';
             $('.temperature').empty();
@@ -653,7 +656,7 @@
             // document.querySelector('.additional-info :nth-child(2)').textContent = `Humidité: ${data.hourly.relativehumidity_2m[0]}`;
             $('.additional-info :nth-child(2)').empty();
             $('.additional-info').append('<i class="material-icons-round">opacity</i> Humidité:' + data.hourly.relativehumidity_2m[0] + '%');
-            console.log(data.hourly.relativehumidity_2m[0]);
+            // console.log(data.hourly.relativehumidity_2m[0]);
 
         }
 
