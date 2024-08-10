@@ -40,6 +40,22 @@
             background-color: #dddddda9;
             font-weight: bold;
         }
+        .category-btn {
+  /* ... autres styles ... */
+  white-space: nowrap; /* Empêche toujours le retour à la ligne */
+  overflow: hidden;      /* Cache le texte qui déborde */
+  text-overflow: ellipsis; /* Ajoute des points de suspension si nécessaire */
+
+  /* Classes Bootstrap pour la taille de texte réactive */
+  font-size: 1rem;  /* Taille par défaut */
+  text-break: ellipsis; /* Pour les navigateurs qui ne supportent pas text-overflow */
+}
+
+@media (max-width: 576px) { /* Pour les très petits écrans */
+  .category-btn {
+    font-size: 0.8rem; 
+  }
+}
 
         .title_page {
             color: #333;
@@ -269,6 +285,9 @@
             .weather-card-pc {
                 display: none;
             }
+            .title-page {
+                display: none;
+            }
         }
 
         /* Afficher la sidebar uniquement sur mobile et tablette */
@@ -369,7 +388,7 @@
 
     <div class="container mt-4">
         <div class="row">
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 title-page text-center">
                 <span class="title_page">Trombinoscope</span>
             </div>
             <div class="col-md-9 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-5">
@@ -528,7 +547,7 @@
                         <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300">
 
                         <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
-                            <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 truncate whitespace-nowrap">${profile.name}</h3>
+                            <h3 class="text-base sm:text-lg md:text-lg font-semibold mb-2">${profile.name}</h3>
                             <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
                         </div>
                         ${profile.video ? `
