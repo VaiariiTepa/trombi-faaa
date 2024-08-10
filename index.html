@@ -18,10 +18,8 @@
 
     <style>
         /* 
- * Trombinoscope - CSS optimisé 
- */
-
-        /* Styles de base */
+        * Trombinoscope - CSS optimisé 
+        */
         body {
             background-image: url('mairie.jpeg');
             background-position: center;
@@ -500,48 +498,53 @@
         // Nombre de profils à charger initialement
         const initialProfilesToLoad = profiles.length; // Charger tous les profils dès le début
 
-        // Fonction pour charger les profils
-        function loadProfiles(category = 'all') {
+        // Fonction pour charger les profils (optimisée)
+        function loadProfiles(category = 'all', startIndex = 0, numProfilesToLoad = initialProfilesToLoad) {
             // Filtrer les profils en fonction de la catégorie
             const filteredProfiles = category === 'all'
                 ? profiles
                 : profiles.filter(profile => profile.category === category);
 
-            // Mettre à jour le trombinoscope avec les profils filtrés
-            trombinoscope.innerHTML = '';
-            filteredProfiles.forEach((profile, i) => {
-                const card = `
-                    <div class="card profile-card relative overflow-hidden" key="${i}">
-                        <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300 loading="lazy"">
+            // Charger seulement le nombre de profils spécifié
+            const profilesToLoad = filteredProfiles.slice(startIndex, startIndex + numProfilesToLoad);
 
-                        <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
-                            <h3 class="text-base sm:text-lg md:text-lg font-semibold mb-2">${profile.name}</h3>
-                            <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
-                        </div>
-                        ${profile.video ? `
-                        <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" muted loop>
-                            <source src="${profile.video}" type="video/mp4"> 
-                            Your browser does not support the video tag.
-                        </video>
-                        ` : ''} 
-                    </div>
-                    `;
+            // Mettre à jour le trombinoscope avec les profils chargés
+            profilesToLoad.forEach((profile, i) => {
+                const card = `
+      <div class="card profile-card relative overflow-hidden" key="${startIndex + i}">
+        <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300 loading="lazy"> 
+        <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
+          <h3 class="text-base sm:text-lg md:text-lg font-semibold mb-2">${profile.name}</h3>
+          <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
+        </div>
+        ${profile.video ? `
+        <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" 
+               preload="none" muted loop> 
+          <source src="${profile.video}" type="video/mp4"> 
+          Your browser does not support the video tag.
+        </video>
+        ` : ''} 
+      </div>
+    `;
                 trombinoscope.innerHTML += card;
             });
 
-
             // Ajouter les écouteurs d'événements après le chargement des profils
-            const profileCards = document.querySelectorAll('.profile-card');
-            profileCards.forEach(card => {
+            const newProfileCards = document.querySelectorAll('.profile-card:not([data-event-listeners-added])');
+            newProfileCards.forEach(card => {
+                card.dataset.eventListenersAdded = true; // Marquer la carte comme ayant des écouteurs d'événements
+
                 card.addEventListener('mouseenter', () => {
                     const profileImage = card.querySelector('.profile-image');
                     const profileInfo = card.querySelector('.profile-info');
                     const video = card.querySelector('video');
 
-                    profileImage.classList.add('opacity-0');
-                    profileInfo.classList.add('opacity-0');
-                    video.classList.add('opacity-100');
-                    video.play();
+                    if (video) {
+                        profileImage.classList.add('opacity-0');
+                        profileInfo.classList.add('opacity-0');
+                        video.classList.add('opacity-100');
+                        video.play();
+                    }
                 });
 
                 card.addEventListener('mouseleave', () => {
@@ -549,17 +552,17 @@
                     const profileInfo = card.querySelector('.profile-info');
                     const video = card.querySelector('video');
 
-                    profileImage.classList.remove('opacity-0');
-                    profileInfo.classList.remove('opacity-0');
-                    video.classList.remove('opacity-100');
-                    video.pause();
+                    if (video) {
+                        profileImage.classList.remove('opacity-0');
+                        profileInfo.classList.remove('opacity-0');
+                        video.classList.remove('opacity-100');
+                        video.pause();
+                    }
                 });
             });
-
-            // window.dispatchEvent(new Event('resize'));
         }
 
-        // Charger tous les profils initiaux
+        // Charger les profils initiaux
         loadProfiles();
 
         // Gestion des boutons de catégories
