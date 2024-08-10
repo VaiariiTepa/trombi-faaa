@@ -17,92 +17,70 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 
     <style>
-        .title_page {
-            color: #333;
-            font-weight: bold;
-            font-family: "Hind Siliguri", sans-serif;
-            /* Apply the Hind Siliguri font */
-            font-weight: 600;
-            /* Use semibold weight for the title */
+        /* 
+ * Trombinoscope - CSS optimisé 
+ */
+
+        /* Styles de base */
+        body {
+            background-image: url('mairie.jpeg');
+            background-position: center;
+            background-size: cover;
+            /* Image de fond pleine largeur */
+            background-repeat: no-repeat;
+            font-family: 'Lato', sans-serif;
+            /* Police par défaut pour le texte */
+            color: #1f1f1f;
+            /* Couleur de texte par défaut */
         }
 
+        /* Titres */
+        .title_page {
+            color: #333;
+            font-weight: 600;
+            /* Semibold */
+            font-family: "Hind Siliguri", sans-serif;
+            font-size: 38px;
+            /* Taille de police pour le titre principal */
+        }
+
+        /* Boutons */
         .btn {
             display: inline-block;
             font-weight: 400;
             color: #ffffff;
             text-align: center;
             vertical-align: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
             background-color: transparent;
             border: 1px solid white;
-            padding: .375rem .75rem;
+            padding: 0.375rem 0.75rem;
             font-size: 1rem;
             line-height: 1.5;
-            border-radius: .25rem;
-            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-        }
-
-        .category-btn:hover {
-            background-color: #dddddd;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
 
         .category-btn {
             color: #5e5d5d;
             background-color: #ffffffa9;
             font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .category-btn {
-            /* ... autres styles ... */
-            white-space: nowrap;
-            /* Empêche toujours le retour à la ligne */
-            overflow: hidden;
-            /* Cache le texte qui déborde */
-            text-overflow: ellipsis;
-            /* Ajoute des points de suspension si nécessaire */
-
-            /* Classes Bootstrap pour la taille de texte réactive */
-            font-size: 1rem;
-            /* Taille par défaut */
-            text-break: ellipsis;
-            /* Pour les navigateurs qui ne supportent pas text-overflow */
+        .category-btn:hover {
+            background-color: #dddddd;
         }
 
         @media (max-width: 576px) {
-
-            /* Pour les très petits écrans */
             .category-btn {
                 font-size: 0.8rem;
             }
         }
 
-        .title_page {
-            color: #333;
-            font-weight: bold;
-        }
-
-
-        /* Styles existants */
-        .max-h-96 {
-            max-height: 37rem;
-        }
-
-        .dark-mode {
-            background-color: #121212;
-            color: #ffffff;
-        }
-
-        .card {
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
+        /* Cartes */
         .card,
         .weather-card,
         .calendar-card {
@@ -110,37 +88,57 @@
             border-radius: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            color: #1f1f1f;
+            transition: transform 0.3s ease-in-out;
         }
 
-        .dark-mode .card {
-            background-color: #1f1f1f86;
-            color: #e0e0e0;
+        .card:hover {
+            transform: scale(1.05);
         }
 
-        .dark-mode .profile-card p {
-            color: #e0e0e0;
-            /* Ou une autre couleur claire appropriée pour le mode sombre */
+        /* Carte de profil */
+        .profile-card {
+            text-align: center;
+            position: relative;
+            /* Pour positionner l'image de fond */
+            overflow: hidden;
         }
 
-        .material-icons-round {
-            font-size: 24px;
-            vertical-align: middle;
-            color: #007BFF;
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            /* Hauteur de la bande décorative */
+            background-image: url('bande.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
         }
 
-        .dark-mode .material-icons-round {
-            color: #1DA1F2;
+        .profile-card img {
+            width: 100%;
+            border-radius: 50%;
+            margin-bottom: 10px;
         }
 
+        .profile-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .profile-card p {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        /* Carte météo */
         .weather-card {
             display: flex;
-            color: #e0e0e0;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
             background-image: url('meteo.jpg');
-            /* Remplacez par votre image */
             background-size: cover;
         }
 
@@ -168,11 +166,6 @@
             font-weight: bold;
         }
 
-        .title_page {
-            font-size: 38px;
-            font-weight: bold;
-        }
-
         .condition {
             font-size: 20px;
             font-weight: 500;
@@ -185,39 +178,11 @@
             font-size: 14px;
         }
 
-        .profile-card img {
-            width: 100%;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-
-
-        .profile-card {
-            text-align: center;
-            padding: 15px;
-            background-image: url('bande.jpg');
-            /* Remplacez par le chemin correct */
-            background-position: top center;
-            /* Position en haut et centrée */
-            background-size: contain;
-            /* Conserve les proportions de l'image */
-            background-repeat: no-repeat;
-            /* Évite la répétition de l'image */
-        }
-
-        .profile-card h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .profile-card p {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
-
+        /* Carte calendrier */
         .calendar-card ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
         }
 
         .calendar-card li {
@@ -227,51 +192,102 @@
             border-bottom: 1px solid #dee2e6;
         }
 
+        .calendar-events,
+        .card-title {
+            color: black;
+            background-color: #f5f5f5;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Trombinoscope */
+        .trombinoscope-container {
+            max-height: calc(100vh - 10rem);
+            overflow-y: auto;
+        }
+
+        /* Icônes */
+        .material-icons-round {
+            font-size: 24px;
+            vertical-align: middle;
+            color: #007BFF;
+        }
+
+        /* Media queries */
+        @media (max-width: 767px) {
+            body {
+                background-size: auto 100%;
+                animation: backgroundScrollMobile 60s linear infinite;
+            }
+
+            .side-content,
+            .calendar-card-pc,
+            .weather-card-pc,
+            .title-page {
+                display: none;
+            }
+
+            .mobile-sidebar {
+                display: block;
+            }
+        }
+
+        /* Animations */
+        @keyframes backgroundScrollMobile {
+            from {
+                background-position: right center;
+            }
+
+            to {
+                background-position: left center;
+            }
+        }
 
         .toggle-animation {
             transition: all 2s ease-in-out;
         }
 
-        /* Optimisation de la hauteur du trombinoscope */
-        .trombinoscope-container {
-            max-height: calc(100vh - 10rem);
-            /* Adapte la hauteur à l'écran */
-            overflow-y: auto;
-            /* Ajoute une barre de défilement si nécessaire */
+        /* Mode sombre */
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
         }
 
-
-        .dark-mode .load-more-btn {
-            background-color: #1DA1F2;
+        .dark-mode .card {
+            background-color: #1f1f1f86;
         }
 
-        /* Animation de fondu enchaîné */
-        .fade-enter-active,
-        .fade-leave-active {
-            transition: opacity 0.3s;
+        .dark-mode .profile-card p {
+            color: #e0e0e0;
         }
 
-        .fade-enter,
-        .fade-leave-to
-
-        /* .fade-leave-active below version 2.1.8 */
-            {
-            opacity: 0;
+        .dark-mode .material-icons-round {
+            color: #1DA1F2;
         }
 
-        /* Styles pour la sidebar mobile */
+        .dark-mode::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: -1;
+        }
+
+        /* Sidebar mobile */
         .mobile-sidebar {
             position: fixed;
             top: 0;
             left: -250px;
-            /* Cachée par défaut */
             width: 250px;
             height: 100%;
             background-color: #f8f9fa;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
             z-index: 1000;
-            /* Assurez-vous qu'elle est au-dessus du contenu */
         }
 
         .mobile-sidebar-open {
@@ -291,129 +307,41 @@
             cursor: pointer;
         }
 
-        /* Masquer UNIQUEMENT la météo et le calendrier sur mobile et tablette */
-        @media (max-width: 767px) {
-            .side-content {
-                /* Nouvelle classe pour cibler uniquement la météo et le calendrier */
-                display: none;
-            }
-
-            .calendar-card-pc {
-                display: none;
-            }
-
-            .weather-card-pc {
-                display: none;
-            }
-
-            .title-page {
-                display: none;
-            }
+        /* Autres styles */
+        .max-h-96 {
+            max-height: 37rem;
         }
 
-        /* Afficher la sidebar uniquement sur mobile et tablette */
-        @media (max-width: 767px) {
-            .mobile-sidebar {
-                display: block;
-            }
-
-
-
+        .dark-mode .load-more-btn {
+            background-color: #1DA1F2;
         }
 
-        @media (max-width: 767px) {
+        /* Animation de fondu enchaîné */
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity 0.3s;
+        }
 
-            /* Pour les écrans jusqu'à 767px de large (tablettes et mobiles) */
-            .profile-card h3,
-            .profile-card p {
-                white-space: normal;
-                /* Permettre le retour à la ligne */
-            }
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0;
         }
 
         /* Style Google Agenda pour le calendrier */
         .calendar-card {
             background-color: #d2d2d28e;
-            /* Fond blanc */
             border: 1px solid #ddd;
-            /* Bordure subtile */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            /* Ombre légère */
             font-family: 'Roboto', sans-serif;
-            /* Police */
         }
 
-        .calendar-events,
-        .card-title {
-            color: black;
-            background-color: #f5f5f5;
-            /* Couleur de fond des événements */
-            border: 1px solid #eee;
-            /* Bordure des événements */
-            /* padding: 10px 15px; */
-            /* Espace autour du texte */
-            border-radius: 5px;
-            /* Coins arrondis */
-            margin-bottom: 5px;
-            /* Espace entre les événements */
-        }
-
-        .calendar-card ul {
-            margin: 0;
-            /* Supprimer les marges de la liste */
-            padding: 0;
-        }
-
-        body {
-            background-image: url('mairie.jpeg');
-            background-position: center;
-            background-size: 100% auto;
-            /* Redimensionne l'image pour que sa largeur remplisse l'écran, conserve la hauteur d'origine */
-            background-repeat: no-repeat;
-            /* animation: backgroundScroll 120s linear infinite; */
-        }
-
+        /* Responsive design */
         @media (max-width: 767px) {
 
-            /* Pour les écrans jusqu'à 767px de large (tablettes et mobiles) */
-            body {
-                background-size: auto 100%;
-                /* Pour les petits écrans, la hauteur est prioritaire */
-                animation: backgroundScrollMobile 60s linear infinite;
+            .profile-card h3,
+            .profile-card p {
+                white-space: normal;
             }
-        }
-
-        @keyframes backgroundScrollMobile {
-            from {
-                background-position: right center;
-            }
-
-            to {
-                background-position: left center;
-            }
-        }
-
-        @keyframes backgroundScroll {
-            from {
-                background-position: bottom center;
-            }
-
-            to {
-                background-position: top center;
-            }
-        }
-
-        .dark-mode::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
-            /* Voile noir avec 50% d'opacité */
-            z-index: -1;
-            /* Place le voile derrière tous les autres éléments */
         }
     </style>
 </head>
