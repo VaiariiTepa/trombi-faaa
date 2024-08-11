@@ -342,6 +342,54 @@
                 white-space: normal;
             }
         }
+        /* Media Queries pour ajuster la taille de la police */
+@media (max-width: 480px) { /* Pour mobiles et plus petits */
+  .profile-card h3 {
+    font-size: 0.9rem; 
+    white-space: nowrap;  /* Empêche les retours à la ligne */
+  }
+
+  .profile-card p {
+    font-size: 0.7rem;
+    white-space: nowrap;  /* Empêche les retours à la ligne */
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) { /* Pour tablettes */
+  .profile-card h3 {
+    font-size: 1rem; 
+    /* white-space: nowrap;  Empêche les retours à la ligne */
+  }
+
+  .profile-card p {
+    font-size: 0.9rem; 
+    /* white-space: nowrap;  Empêche les retours à la ligne */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) { /* Pour écrans larges */
+  .profile-card h3 {
+    font-size: 1.2rem; 
+    /* white-space: nowrap;  Empêche les retours à la ligne */
+  }
+
+  .profile-card p {
+    font-size: 1rem; 
+    /* white-space: nowrap; */
+  }
+}
+
+@media (min-width: 1025px) { /* Pour écrans XL */
+  .profile-card h3 {
+    font-size: 1rem; 
+    white-space: nowrap;  /* Empêche les retours à la ligne */
+  }
+
+  .profile-card p {
+    font-size: 0.8rem; 
+    white-space: nowrap;  /* Empêche les retours à la ligne */
+  }
+}
     </style>
 </head>
 
@@ -522,7 +570,7 @@
                 profileInfoDiv.classList.add('profile-info', 'inset-0', 'transition-opacity', 'duration-300', 'flex', 'flex-col', 'items-center', 'justify-center');
 
                 const h3 = document.createElement('h3');
-                h3.classList.add('text-base', 'sm:text-lg', 'md:text-lg', 'font-semibold', 'mb-2');
+                h3.classList.add('text-base', 'sm:text-lg', 'md:text-lg', 'font-semibold');
                 h3.textContent = profile.name;
                 profileInfoDiv.appendChild(h3);
 
