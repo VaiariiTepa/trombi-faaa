@@ -219,7 +219,8 @@
                 animation: backgroundScrollMobile 60s linear infinite;
             }
 
-            .calendar-card, .weather-card{
+            .calendar-card,
+            .weather-card {
                 display: none;
             }
 
@@ -346,7 +347,8 @@
             <div class="col-lg-12 col-xl-3  d-md-12 d-lg-block title-page text-center">
                 <span class="title_page">Trombinoscope</span>
             </div>
-            <div class="col-md-12 col-lg-12 col-xl-9 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-6">
+            <div
+                class="col-md-12 col-lg-12 col-xl-9 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-6">
                 <button class="category-btn col btn rounded-pill  btn-outline-light active"
                     data-category="all">Tous</button>
                 <button class="category-btn col btn rounded-pill  btn-outline-light marketing"
@@ -490,39 +492,63 @@
             { name: "Audrey Moreau", job: "Psychologue du travail", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" }
         ];
 
-        // Nombre de profils à charger initialement
-        const initialProfilesToLoad = profiles.length; // Charger tous les profils dès le début
-
-        // Fonction pour charger les profils
+        // Fonction pour charger les profils (optimisée)
         function loadProfiles(category = 'all') {
-            // Filtrer les profils en fonction de la catégorie
-            const filteredProfiles = category === 'all'
-                ? profiles
-                : profiles.filter(profile => profile.category === category);
+            // Utilisation de DocumentFragment pour améliorer les performances de manipulation du DOM
+            const fragment = document.createDocumentFragment();
 
-            // Mettre à jour le trombinoscope avec les profils filtrés
-            trombinoscope.innerHTML = '';
+            // Filtrer les profils (inchangé)
+            const filteredProfiles = category === 'all' ? profiles : profiles.filter(profile => profile.category === category);
+
             filteredProfiles.forEach((profile, i) => {
-                const card = `
-                    <div class="card profile-card relative overflow-hidden" key="${i}">
-                        <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300 loading="lazy"">
+                // Création des éléments du DOM en utilisant la création d'éléments pour de meilleures performances
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('card', 'profile-card', 'relative', 'overflow-hidden');
+                cardDiv.setAttribute('key', i);
 
-                        <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
-                            <h3 class="text-base sm:text-lg md:text-lg font-semibold mb-2">${profile.name}</h3>
-                            <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
-                        </div>
-                        ${profile.video ? `
-                        <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" muted loop>
-                            <source src="${profile.video}" type="video/mp4"> 
-                            Your browser does not support the video tag.
-                        </video>
-                        ` : ''} 
-                    </div>
-                    `;
-                trombinoscope.innerHTML += card;
+                const img = document.createElement('img');
+                img.src = profile.photo;
+                img.alt = profile.name;
+                img.classList.add('profile-image', 'transition-opacity', 'duration-300');
+                img.loading = 'lazy';
+                cardDiv.appendChild(img);
+
+                const profileInfoDiv = document.createElement('div');
+                profileInfoDiv.classList.add('profile-info', 'inset-0', 'transition-opacity', 'duration-300', 'flex', 'flex-col', 'items-center', 'justify-center');
+
+                const h3 = document.createElement('h3');
+                h3.classList.add('text-base', 'sm:text-lg', 'md:text-lg', 'font-semibold', 'mb-2');
+                h3.textContent = profile.name;
+                profileInfoDiv.appendChild(h3);
+
+                const p = document.createElement('p');
+                p.classList.add('text-sm', 'sm:text-base', 'md:text-lg', 'text-gray-600');
+                p.textContent = profile.job;
+                profileInfoDiv.appendChild(p);
+
+                cardDiv.appendChild(profileInfoDiv);
+
+                if (profile.video) {
+                    const video = document.createElement('video');
+                    video.classList.add('absolute', 'inset-0', 'w-full', 'h-full', 'object-cover', 'opacity-0', 'transition-opacity', 'duration-300');
+                    video.muted = true;
+                    video.loop = true;
+
+                    const source = document.createElement('source');
+                    source.src = profile.video;
+                    source.type = 'video/mp4';
+                    video.appendChild(source);
+
+                    cardDiv.appendChild(video);
+                }
+
+                // Ajout de la carte au fragment
+                fragment.appendChild(cardDiv);
             });
 
-
+            // Remplacement du contenu du trombinoscope en une seule opération pour de meilleures performances
+            trombinoscope.innerHTML = '';
+            trombinoscope.appendChild(fragment);
             // Ajouter les écouteurs d'événements après le chargement des profils
             const profileCards = document.querySelectorAll('.profile-card');
             profileCards.forEach(card => {
