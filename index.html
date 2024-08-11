@@ -221,6 +221,21 @@
         }
 
         /* Media queries */
+        @media (min-width: 768px) and (max-width: 1023px)  {
+            .mobile-sidebar {
+                display: block;
+            }
+            /* Point de rupture pour les écrans jusqu'à LG */
+            .side-content,
+            .calendar-card-pc,
+            .weather-card-pc,
+            .title-page {
+                display: none;
+            }
+
+            
+        }
+
         @media (max-width: 767px) {
             body {
                 background-size: auto 100%;
@@ -360,7 +375,7 @@
             <div class="col-md-3 title-page text-center">
                 <span class="title_page">Trombinoscope</span>
             </div>
-            <div class="col-md-9 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div class="col-md-12 col-lg-9 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-6">
                 <button class="category-btn col btn rounded-pill  btn-outline-light active"
                     data-category="all">Tous</button>
                 <button class="category-btn col btn rounded-pill  btn-outline-light marketing"
@@ -449,10 +464,10 @@
                 </div>
             </div>
 
-            <div class="col-md-9">
+            <div class="col-md-12 col-lg-9">
 
                 <transition-group name="fade" tag="div"
-                    class="trombinoscope-container grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-6"
+                    class="trombinoscope-container grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6"
                     id="trombinoscope">
                 </transition-group>
 
