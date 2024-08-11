@@ -219,15 +219,11 @@
                 animation: backgroundScrollMobile 60s linear infinite;
             }
 
-            .side-content,
-            .calendar-card-pc,
-            .weather-card-pc{
+            .calendar-card, .weather-card{
                 display: none;
             }
 
-            .mobile-sidebar {
-                display: block;
-            }
+
         }
 
         /* Animations */
@@ -369,7 +365,7 @@
     </div>
 
     <div id="mobileSidebar" class="mobile-sidebar">
-        <div class="mobile-sidebar-content">
+        <div class="mobile-sidebar-content col-12">
             <span id="closeMobileSidebar" class="mobile-sidebar-close-btn material-icons-round">close</span>
 
             <div class="calendar-card mb-4 card">
@@ -401,7 +397,7 @@
         </div>
     </div>
 
-    <div class="fixed top-4 left-4 z-50 md:hidden">
+    <div class="fixed top-4 left-4 z-50 lg:hidden xl:hidden">
         <button id="openMobileSidebar" class="text-gray-800 dark:text-gray-200">
             <i class="material-icons-round">menu</i>
         </button>
