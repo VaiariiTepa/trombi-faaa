@@ -124,14 +124,6 @@
         .profile-card h3 {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #333;
-            /* Couleur sombre par défaut pour le mode clair */
-        }
-
-        /* Styles spécifiques pour le mode sombre */
-        .dark-mode .profile-card h3 {
-            color: #e0e0e0;
-            /* Couleur claire pour le mode sombre */
         }
 
         .profile-card p {
@@ -221,21 +213,6 @@
         }
 
         /* Media queries */
-        @media (min-width: 768px) and (max-width: 1023px)  {
-            .mobile-sidebar {
-                display: block;
-            }
-            /* Point de rupture pour les écrans jusqu'à LG */
-            .side-content,
-            .calendar-card-pc,
-            .weather-card-pc,
-            .title-page {
-                display: none;
-            }
-
-            
-        }
-
         @media (max-width: 767px) {
             body {
                 background-size: auto 100%;
@@ -244,8 +221,7 @@
 
             .side-content,
             .calendar-card-pc,
-            .weather-card-pc,
-            .title-page {
+            .weather-card-pc{
                 display: none;
             }
 
@@ -362,7 +338,6 @@
             .profile-card h3,
             .profile-card p {
                 white-space: normal;
-
             }
         }
     </style>
@@ -372,10 +347,10 @@
 
     <div class="container mt-4">
         <div class="row">
-            <div class="col-md-3 title-page text-center">
+            <div class="col-lg-12 col-xl-3  d-md-12 d-lg-block title-page text-center">
                 <span class="title_page">Trombinoscope</span>
             </div>
-            <div class="col-md-12 col-lg-9 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-6">
+            <div class="col-md-12 col-lg-12 col-xl-9 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-6">
                 <button class="category-btn col btn rounded-pill  btn-outline-light active"
                     data-category="all">Tous</button>
                 <button class="category-btn col btn rounded-pill  btn-outline-light marketing"
@@ -434,7 +409,7 @@
 
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-3  d-md-none d-xl-block">
                 <div class="calendar-card calendar-card-pc mb-4 card">
                     <div class="card-body">
                         <h5 class="card-title"><i class="material-icons-round">event</i> Calendrier</h5>
@@ -464,10 +439,10 @@
                 </div>
             </div>
 
-            <div class="col-md-12 col-lg-9">
+            <div class="col-md-12 col-xl-9">
 
                 <transition-group name="fade" tag="div"
-                    class="trombinoscope-container grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6"
+                    class="trombinoscope-container grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-6"
                     id="trombinoscope">
                 </transition-group>
 
@@ -522,53 +497,48 @@
         // Nombre de profils à charger initialement
         const initialProfilesToLoad = profiles.length; // Charger tous les profils dès le début
 
-        // Fonction pour charger les profils (optimisée)
-        function loadProfiles(category = 'all', startIndex = 0, numProfilesToLoad = initialProfilesToLoad) {
+        // Fonction pour charger les profils
+        function loadProfiles(category = 'all') {
             // Filtrer les profils en fonction de la catégorie
             const filteredProfiles = category === 'all'
                 ? profiles
                 : profiles.filter(profile => profile.category === category);
 
-            // Charger seulement le nombre de profils spécifié
-            const profilesToLoad = filteredProfiles.slice(startIndex, startIndex + numProfilesToLoad);
-
-            // Mettre à jour le trombinoscope avec les profils chargés
-            profilesToLoad.forEach((profile, i) => {
+            // Mettre à jour le trombinoscope avec les profils filtrés
+            trombinoscope.innerHTML = '';
+            filteredProfiles.forEach((profile, i) => {
                 const card = `
-      <div class="card profile-card relative overflow-hidden" key="${startIndex + i}">
-        <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300 loading="lazy"> 
-        <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
-          <h3 class="text-base sm:text-lg md:text-lg font-semibold mb-2">${profile.name}</h3>
-          <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
-        </div>
-        ${profile.video ? `
-        <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" 
-               preload="none" muted loop> 
-          <source src="${profile.video}" type="video/mp4"> 
-          Your browser does not support the video tag.
-        </video>
-        ` : ''} 
-      </div>
-    `;
+                    <div class="card profile-card relative overflow-hidden" key="${i}">
+                        <img src="${profile.photo}" alt="${profile.name}" class="profile-image transition-opacity duration-300 loading="lazy"">
+
+                        <div class="profile-info inset-0 transition-opacity duration-300 flex flex-col items-center justify-center">
+                            <h3 class="text-base sm:text-lg md:text-lg font-semibold mb-2">${profile.name}</h3>
+                            <p class="text-sm sm:text-base md:text-lg text-gray-600 ">${profile.job}</p>
+                        </div>
+                        ${profile.video ? `
+                        <video class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300" muted loop>
+                            <source src="${profile.video}" type="video/mp4"> 
+                            Your browser does not support the video tag.
+                        </video>
+                        ` : ''} 
+                    </div>
+                    `;
                 trombinoscope.innerHTML += card;
             });
 
-            // Ajouter les écouteurs d'événements après le chargement des profils
-            const newProfileCards = document.querySelectorAll('.profile-card:not([data-event-listeners-added])');
-            newProfileCards.forEach(card => {
-                card.dataset.eventListenersAdded = true; // Marquer la carte comme ayant des écouteurs d'événements
 
+            // Ajouter les écouteurs d'événements après le chargement des profils
+            const profileCards = document.querySelectorAll('.profile-card');
+            profileCards.forEach(card => {
                 card.addEventListener('mouseenter', () => {
                     const profileImage = card.querySelector('.profile-image');
                     const profileInfo = card.querySelector('.profile-info');
                     const video = card.querySelector('video');
 
-                    if (video) {
-                        profileImage.classList.add('opacity-0');
-                        profileInfo.classList.add('opacity-0');
-                        video.classList.add('opacity-100');
-                        video.play();
-                    }
+                    profileImage.classList.add('opacity-0');
+                    profileInfo.classList.add('opacity-0');
+                    video.classList.add('opacity-100');
+                    video.play();
                 });
 
                 card.addEventListener('mouseleave', () => {
@@ -576,17 +546,17 @@
                     const profileInfo = card.querySelector('.profile-info');
                     const video = card.querySelector('video');
 
-                    if (video) {
-                        profileImage.classList.remove('opacity-0');
-                        profileInfo.classList.remove('opacity-0');
-                        video.classList.remove('opacity-100');
-                        video.pause();
-                    }
+                    profileImage.classList.remove('opacity-0');
+                    profileInfo.classList.remove('opacity-0');
+                    video.classList.remove('opacity-100');
+                    video.pause();
                 });
             });
+
+            // window.dispatchEvent(new Event('resize'));
         }
 
-        // Charger les profils initiaux
+        // Charger tous les profils initiaux
         loadProfiles();
 
         // Gestion des boutons de catégories
