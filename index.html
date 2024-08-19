@@ -5,247 +5,212 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trombi-faaa</title>
+    <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-
+    <!-- <link rel="stylesheet" href="https://cdn.tailwindcss.com/"> -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;700&family=Lato:ital,wght@0,400;1,400&display=swap"
         rel="stylesheet">
+
+    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
-        /* 
-        * Trombinoscope - CSS optimisé 
-        */
         body {
-            background-image: url('mairie.jpeg');
-            background-position: center;
-            background-size: cover;
-            /* Image de fond pleine largeur */
-            background-repeat: no-repeat;
+            background: url('mairie.jpeg') center/cover no-repeat;
             font-family: 'Lato', sans-serif;
-            /* Police par défaut pour le texte */
             color: #1f1f1f;
-            /* Couleur de texte par défaut */
         }
 
-        /* Titres */
         .title_page {
             color: #333;
             font-weight: 600;
-            /* Semibold */
             font-family: "Hind Siliguri", sans-serif;
             font-size: 38px;
-            /* Taille de police pour le titre principal */
         }
 
-        /* Boutons */
         .btn {
-            display: inline-block;
-            font-weight: 400;
-            color: #ffffff;
-            text-align: center;
-            vertical-align: middle;
-            user-select: none;
-            background-color: transparent;
             border: 1px solid white;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            border-radius: 0.25rem;
-            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            color: #ffffff;
+            background-color: rgba(96, 96, 96, 0.379);
+            transition: all 0.15s ease-in-out;
         }
 
-        .category-btn {
-            color: #5e5d5d;
-            background-color: #ffffffa9;
-            font-weight: bold;
-            white-space: nowrap;
+        .floating-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .floating-btn {
+            margin-left: 10px;
+            background-color: #f0ad4e;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .floating-btn:hover {
+            background-color: #0d8ecf;
+        }
+
+        .floating-btn .material-icons-round {
+            font-size: 40px;
+        }
+
+
+        .category-list {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            max-height: 0;
             overflow: hidden;
-            text-overflow: ellipsis;
+            transition: max-height 0.3s ease-out;
         }
 
-        .category-btn:hover {
-            background-color: #dddddd;
+        .category-list.open {
+            max-height: 300px;
+            /* Ajustez cette valeur selon le nombre de catégories */
+            transition: max-height 0.5s ease-in;
         }
 
-        @media (max-width: 576px) {
-            .category-btn {
-                font-size: 0.8rem;
-            }
+        .category-list button {
+            width: 100%;
+            text-align: left;
+            padding: 10px 20px;
+            border: none;
+            background-color: transparent;
+            font-size: 14px;
+            color: #5e5d5d;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Cartes */
-        .card,
-        .weather-card,
-        .calendar-card {
+        .category-list button:hover,
+        .category-list button.active {
+            background-color: #1da1f2;
+            color: white;
+        }
+
+        .card {
             background-color: #f8f9faab;
-            border-radius: 20px;
+            border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 8px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        /* Carte de profil */
-        .profile-card {
-            text-align: center;
-            position: relative;
-            /* Pour positionner l'image de fond */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
+            height: 250px;
+            opacity: 0;
+            /* transform: translateY(20px); */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            perspective: 1000px;
+            cursor: pointer;
+            position: relative;
         }
 
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-inner {
+            position: relative;
             width: 100%;
-            height: 50px;
-            /* Hauteur de la bande décorative */
-            background-image: url('bande.jpg');
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .card:hover .card-inner {
+            /* transform: rotateY(180deg); */
+            transform: translateY(-110%);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-front {
+            transition: transform 0.3s ease;
+            /* Ajoute une transition pour un effet fluide */
+        }
+
+
+        .card-back {
+            border-radius: 12px;
+            background-color: #1da1f2;
+            color: white;
+            /* transform: rotateY(180deg); */
+            transform: translateY(110%);
         }
 
         .profile-card img {
-            width: 100%;
             border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
             margin-bottom: 10px;
         }
 
-        .profile-card h3 {
-            font-size: 1.25rem;
+        .profile-name {
+            font-size: 18px;
             font-weight: 600;
-            color: #121212;
-        }
-
-
-        .profile-card p {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
-
-        /* Carte météo */
-        .weather-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background-image: url('meteo.jpg');
-            background-size: cover;
-        }
-
-        .weather-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .weather-main {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            margin: 20px 0;
-        }
-
-        .weather-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .temperature {
-            font-size: 48px;
-            font-weight: bold;
-        }
-
-        .condition {
-            font-size: 20px;
-            font-weight: 500;
-            text-transform: capitalize;
-        }
-
-        .additional-info {
-            display: flex;
-            justify-content: space-around;
-            font-size: 14px;
-        }
-
-        /* Carte calendrier */
-        .calendar-card ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .calendar-card li {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .calendar-events,
-        .card-title {
-            color: black;
-            background-color: #f5f5f5;
-            border: 1px solid #eee;
-            border-radius: 5px;
+            color: #333;
             margin-bottom: 5px;
         }
 
-        /* Trombinoscope */
-        .trombinoscope-container {
-            max-height: calc(100vh - 10rem);
-            overflow-y: auto;
+        .profile-job {
+            font-size: 14px;
+            color: #777;
         }
 
-        /* Icônes */
-        .material-icons-round {
-            font-size: 24px;
-            vertical-align: middle;
-            color: #007BFF;
-        }
+        @keyframes tileAnimation {
 
-        /* Media queries */
-        @media (max-width: 767px) {
-            body {
-                background-size: auto 100%;
-                animation: backgroundScrollMobile 60s linear infinite;
+            0%,
+            100% {
+                transform: scale(1);
             }
 
-            .calendar-card-pc,
-            .weather-card-pc {
-                display: none;
-            }
-
-
-        }
-
-
-        /* Animations */
-        @keyframes backgroundScrollMobile {
-            from {
-                background-position: right center;
-            }
-
-            to {
-                background-position: left center;
+            50% {
+                transform: scale(1.05);
             }
         }
 
-        .toggle-animation {
-            transition: all 2s ease-in-out;
+        .card:hover .card-front {
+            transform: translateY(-33%);
+            /* Soulève la carte d'un tiers vers le haut */
         }
 
-        /* Mode sombre */
         .dark-mode {
             background-color: #121212;
             color: #ffffff;
@@ -255,287 +220,99 @@
             background-color: #1f1f1f86;
         }
 
-        .dark-mode .profile-card p {
-            color: #e0e0e0;
-        }
-
-        .dark-mode .profile-card h3 {
-            color: #fbfbfb;
-        }
-
-        .dark-mode .material-icons-round {
+        /* .dark-mode .material-icons-round {
             color: #1DA1F2;
+        } */
+
+        .dark-mode .card-back .profile-name,
+        .dark-mode .card-front .profile-job {
+            color: #f0f0f0;
+            /* Ou une autre couleur claire de votre choix */
         }
 
-        .dark-mode::before {
-            content: "";
+        #darkOverlay {
+            display: none;
+            /* Masqué par défaut */
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Noir avec 50% d'opacité */
             z-index: -1;
         }
 
-        /* Sidebar mobile */
-        .mobile-sidebar {
-            position: fixed;
-            top: 0;
-            left: -350px;
-            width: 350px;
-            height: 100%;
-            background-color: #f8f9fa;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-        }
-
-        .mobile-sidebar-open {
-            transform: translateX(350px);
-        }
-
-        .mobile-sidebar-content {
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .mobile-sidebar-close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* Autres styles */
-        .max-h-96 {
-            max-height: 37rem;
-        }
-
-        .dark-mode .load-more-btn {
-            background-color: #1DA1F2;
-        }
-
-        /* Animation de fondu enchaîné */
-        .fade-enter-active,
-        .fade-leave-active {
-            transition: opacity 0.3s;
-        }
-
-        .fade-enter,
-        .fade-leave-to {
-            opacity: 0;
-        }
-
-        /* Style Google Agenda pour le calendrier */
-        .calendar-card {
-            background-color: #d2d2d28e;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-family: 'Roboto', sans-serif;
-        }
-
-        /* Responsive design */
-        @media (max-width: 767px) {
-
-            .profile-card h3,
-            .profile-card p {
-                white-space: normal;
-            }
-        }
-
-        /* Media Queries pour ajuster la taille de la police */
-        @media (max-width: 480px) {
-
-            /* Pour mobiles et plus petits */
-            .profile-card h3 {
-                font-size: 0.9rem;
-                /* white-space: nowrap; */
-                /* Empêche les retours à la ligne */
-            }
-
-            .profile-card p {
-                font-size: 0.7rem;
-                /* white-space: nowrap; */
-                /* Empêche les retours à la ligne */
-            }
-        }
-
-        @media (min-width: 481px) and (max-width: 768px) {
-
-            /* Pour tablettes */
-            .profile-card h3 {
-                font-size: 1rem;
-                /* white-space: nowrap;  Empêche les retours à la ligne */
-            }
-
-            .profile-card p {
-                font-size: 0.9rem;
-                /* white-space: nowrap;  Empêche les retours à la ligne */
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-
-            /* Pour écrans larges */
-            .profile-card h3 {
-                font-size: 1.2rem;
-                /* white-space: nowrap;  Empêche les retours à la ligne */
-            }
-
-            .profile-card p {
-                font-size: 1rem;
-                /* white-space: nowrap; */
-            }
-        }
-
-        @media (min-width: 1025px) {
-
-            /* Pour écrans XL */
-            .profile-card h3 {
-                font-size: 1rem;
-                white-space: nowrap;
-                /* Empêche les retours à la ligne */
-            }
-
-            .profile-card p {
-                font-size: 0.8rem;
-                white-space: nowrap;
-                /* Empêche les retours à la ligne */
-            }
+        .dark-mode #darkOverlay {
+            display: block;
+            /* Affiché en mode sombre */
         }
     </style>
 </head>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white">
-
+    <div id="darkOverlay"></div>
     <div class="container mt-4">
         <div class="row">
-            <div class="col-lg-12 col-xl-3  d-md-12 d-lg-block title-page text-center">
-                <span class="title_page">Trombinoscope</span>
-            </div>
-            <div
-                class="col-md-12 col-lg-12 col-xl-9 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-6 gap-6">
-                <button class="category-btn col btn rounded-pill  btn-outline-light active"
-                    data-category="all">Tous</button>
-                <button class="category-btn col btn rounded-pill  btn-outline-light marketing"
-                    data-category="marketing">Marketing</button>
-                <button class="category-btn col btn rounded-pill  btn-outline-light rh" data-category="rh">RH</button>
-                <button class="category-btn col btn rounded-pill  btn-outline-light developpement"
-                    data-category="developpement">Développement</button>
-                <button id="toggleDarkMode" class="col-12 rounded-pill btn btn-secondary mr-3">
-                    <i class="material-icons-round">dark_mode</i>
-                </button>
-                <button id="downloadPDF" class="col rounded-pill btn btn-outline-light" "> 
-                    <i class=" material-icons-round">picture_as_pdf</i>
-                </button>
+            <div class="col-lg-12 col-xl-12 text-center">
+                <span class="title_page">Trombinoscope - Mairie de FAAA</span>
             </div>
         </div>
-    </div>
-
-    <div id="mobileSidebar" class="mobile-sidebar">
-        <div class="mobile-sidebar-content col-12">
-            <span id="closeMobileSidebar" class="mobile-sidebar-close-btn material-icons-round">close</span>
-
-            <div class="calendar-card mb-4 card">
-                <div class="card-body p-1">
-                    <h5 class="card-title"><i class="material-icons-round">event</i> Calendrier</h5>
-                    <ul class="list-unstyled calendar-events mt-3">
-                        <li>Réunion d'équipe - 10:00</li>
-                        <li>Déjeuner client - 12:30</li>
-                        <li>Présentation projet - 15:00</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="weather-card mb-4 card">
-                <div class="card-body p-1">
-                    <h5 class="card-title"><i class="material-icons-round">wb_sunny</i> Météo - Faaa, TAHITI</h5>
-                    <div class="weather-main mt-3">
-                        <div class="weather-info">
-                            <span class="temperature">25°C</span>
-                            <span class="condition">Ensoleillé</span>
-                        </div>
-                    </div>
-                    <div class="additional-info mt-3">
-                        <div class="air"><i class="material-icons-round">air</i></div>
-                        <div class="opaciti"><i class="material-icons-round">opacity</i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="fixed top-4 left-4 z-50 lg:hidden xl:hidden">
-        <button id="openMobileSidebar" class="text-gray-800 dark:text-gray-200">
-            <i class="material-icons-round">menu</i>
-        </button>
     </div>
 
     <div class="container mt-5">
         <div class="row">
-            <div class="col-3  d-md-none d-xl-block">
-                <div class="calendar-card calendar-card-pc mb-4 card">
-                    <div class="card-body p-1">
-                        <h5 class="card-title"><i class="material-icons-round">event</i> Calendrier</h5>
-                        <ul class="list-unstyled calendar-events mt-3">
-                            <li>Conseil municipal - 10:00</li>
-                            <li>Déjeuner client - 12:30</li>
-                            <li>Présentation projet - 15:00</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="weather-card weather-card-pc mb-4 card">
-                    <div class="card-body p-1">
-                        <h5 class="card-title"><i class="material-icons-round">wb_sunny</i> Météo - Faaa, TAHITI</h5>
-                        <div class="weather-main mt-3">
-                            <div class="weather-info">
-                                <span class="temperature"></span>
-                                <span class="condition"></span>
-
-                            </div>
-                        </div>
-                        <div class="additional-info mt-3">
-                            <div class="air"><i class="material-icons-round">air</i></div>
-                            <div class="opaciti"><i class="material-icons-round">opacity</i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-12 col-xl-9">
-
-                <transition-group name="fade" tag="div"
-                    class="trombinoscope-container grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-6"
-                    id="trombinoscope">
-                </transition-group>
-
+            <div class="col-md-12 col-xl-12">
+                <div class="trombinoscope-container grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"
+                    id="trombinoscope"></div>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>  
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <div class="floating-buttons">
+        <button id="toggleDarkMode" class="floating-btn shadow-lg">
+            <i class="material-icons-round">dark_mode</i>
+        </button>
+        <button id="downloadPDF" class="floating-btn shadow-lg">
+            <i class="material-icons-round">picture_as_pdf</i>
+        </button>
+        <button id="categoryToggleBtn" class="floating-btn shadow-lg">
+            <i class="material-icons-round">category</i>
+        </button>
+    </div>
+    <div id="categoryList" class="category-list">
+        <button data-category="all">Tous</button>
+        <button data-category="marketing">Marketing</button>
+        <button data-category="rh">RH</button>
+        <button data-category="developpement">Développement</button>
+    </div>
 
     <script>
-        // Mode sombre (inchangé)
+        // Mode sombre
         const toggleDarkMode = document.getElementById('toggleDarkMode');
         toggleDarkMode.addEventListener('click', () => {
-            toggleDarkMode.classList.toggle('toggle-animation');
             document.body.classList.toggle('dark-mode');
         });
 
+        // Affichage des catégories
+        const categoryToggleBtn = document.getElementById('categoryToggleBtn');
+        const categoryList = document.getElementById('categoryList');
+
+        categoryToggleBtn.addEventListener('click', () => {
+            categoryList.classList.toggle('open');
+        });
+        
+        categoryList.addEventListener('click',()=>{
+            categoryList.classList.toggle('open');
+
+        })
+
         // Trombinoscope dynamique
         const trombinoscope = document.getElementById('trombinoscope');
-        const categoryBtns = document.querySelectorAll('.category-btn');
 
-        // Données du trombinoscope 
         const profiles = [
-            { name: "Jean Dupont", job: "Développeur Web", photo: "contact1.jpg", category: "developpement", video: "coucou.mp4" },
-            { name: "Benjamin Curie", job: "Responsable Marketing", photo: "contact2.jpg", category: "marketing", video: "coucou2.mp4" },
+            { name: "Jean Dupont", job: "Développeur Web", photo: "contact1.jpg", category: "developpement" },
+            { name: "Benjamin Curie", job: "Responsable Marketing", photo: "contact2.jpg", category: "marketing" },
             { name: "Alex Martin", job: "Spécialiste RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
             { name: "Sophie Lefebvre", job: "Développeuse Front-end", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
             { name: "Pierre Dubois", job: "Analyste Marketing", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
@@ -560,263 +337,137 @@
             { name: "Audrey Moreau", job: "Psychologue du travail", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" }
         ];
 
-        // Fonction pour charger les profils (optimisée)
         function loadProfiles(category = 'all') {
-            // Utilisation de DocumentFragment pour améliorer les performances de manipulation du DOM
+            currentCategory = category;
             const fragment = document.createDocumentFragment();
-
-            // Filtrer les profils (inchangé)
             const filteredProfiles = category === 'all' ? profiles : profiles.filter(profile => profile.category === category);
 
             filteredProfiles.forEach((profile, i) => {
-                // Création des éléments du DOM en utilisant la création d'éléments pour de meilleures performances
                 const cardDiv = document.createElement('div');
-                cardDiv.classList.add('card', 'profile-card', 'relative', 'overflow-hidden');
-                cardDiv.setAttribute('key', i);
+                cardDiv.classList.add('card', 'profile-card');
+                // cardDiv.setAttribute('key', i);
+
+                const cardInner = document.createElement('div');
+                cardInner.classList.add('card-inner');
+
+                const cardFront = document.createElement('div');
+                cardFront.classList.add('card-front');
 
                 const img = document.createElement('img');
                 img.src = profile.photo;
                 img.alt = profile.name;
                 img.classList.add('profile-image', 'transition-opacity', 'duration-300');
                 img.loading = 'lazy';
-                cardDiv.appendChild(img);
+                cardFront.appendChild(img);
 
-                const profileInfoDiv = document.createElement('div');
-                profileInfoDiv.classList.add('profile-info', 'inset-0', 'transition-opacity', 'duration-300', 'flex', 'flex-col', 'items-center', 'justify-center');
+                const jobDiv = document.createElement('div');
+                jobDiv.classList.add('profile-job');
+                jobDiv.textContent = profile.job;
+                cardFront.appendChild(jobDiv);
 
-                const h3 = document.createElement('h3');
-                h3.classList.add('text-base', 'sm:text-lg', 'md:text-lg', 'font-semibold');
-                h3.textContent = profile.name;
-                profileInfoDiv.appendChild(h3);
+                const cardBack = document.createElement('div');
+                cardBack.classList.add('card-back');
 
-                const p = document.createElement('p');
-                p.classList.add('text-sm', 'sm:text-base', 'md:text-lg', 'text-gray-600');
-                p.textContent = profile.job;
-                profileInfoDiv.appendChild(p);
+                const nameDiv = document.createElement('div');
+                nameDiv.classList.add('profile-name');
+                nameDiv.textContent = profile.name;
+                cardBack.appendChild(nameDiv);
 
-                cardDiv.appendChild(profileInfoDiv);
-
-                if (profile.video) {
-                    const video = document.createElement('video');
-                    video.classList.add('absolute', 'inset-0', 'w-full', 'h-full', 'object-cover', 'opacity-0', 'transition-opacity', 'duration-300');
-                    video.muted = true;
-                    video.loop = true;
-
-                    const source = document.createElement('source');
-                    source.src = profile.video;
-                    source.type = 'video/mp4';
-                    video.appendChild(source);
-
-                    cardDiv.appendChild(video);
-                }
-
-                // Ajout de la carte au fragment
+                cardInner.appendChild(cardFront);
+                cardInner.appendChild(cardBack);
+                cardDiv.appendChild(cardInner);
                 fragment.appendChild(cardDiv);
             });
 
-            // Remplacement du contenu du trombinoscope en une seule opération pour de meilleures performances
             trombinoscope.innerHTML = '';
             trombinoscope.appendChild(fragment);
-            // Ajouter les écouteurs d'événements après le chargement des profils
-            const profileCards = document.querySelectorAll('.profile-card');
-            profileCards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    const profileImage = card.querySelector('.profile-image');
-                    const profileInfo = card.querySelector('.profile-info');
-                    const video = card.querySelector('video');
 
-                    profileImage.classList.add('opacity-0');
-                    profileInfo.classList.add('opacity-0');
-                    video.classList.add('opacity-100');
-                    video.play();
-                });
-
-                card.addEventListener('mouseleave', () => {
-                    const profileImage = card.querySelector('.profile-image');
-                    const profileInfo = card.querySelector('.profile-info');
-                    const video = card.querySelector('video');
-
-                    profileImage.classList.remove('opacity-0');
-                    profileInfo.classList.remove('opacity-0');
-                    video.classList.remove('opacity-100');
-                    video.pause();
-                });
+            // Animation d'apparition
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, i) => {
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, i * 100); // Délai progressif pour chaque carte
             });
-
-            // window.dispatchEvent(new Event('resize'));
+                        // Mise à jour de l'apparence du bouton de catégorie actif
+                        updateActiveCategoryButton();
         }
-
-        // Charger tous les profils initiaux
         loadProfiles();
 
-        // Gestion des boutons de catégories
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                const category = btn.dataset.category;
-                loadProfiles(category);
+        function updateActiveCategoryButton() {
+            const categoryBtns = categoryList.querySelectorAll('button');
+            categoryBtns.forEach(btn => {
+                if (btn.dataset.category === currentCategory) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
             });
-        });
-
-        // Gestion de la sidebar mobile
-        const openMobileSidebar = document.getElementById('openMobileSidebar');
-        const closeMobileSidebar = document.getElementById('closeMobileSidebar');
-        const mobileSidebar = document.getElementById('mobileSidebar');
-
-        openMobileSidebar.addEventListener('click', () => {
-            mobileSidebar.classList.add('mobile-sidebar-open');
-        });
-
-        closeMobileSidebar.addEventListener('click', () => {
-            mobileSidebar.classList.remove('mobile-sidebar-open');
-        });
-        // Coordonnées de Faaa (latitude et longitude) - Remplacez par les valeurs correctes si nécessaire
-        const latitude = -17.33;
-        const longitude = -149.35;
-        // Mapping des codes météo Open-Meteo vers des descriptions textuelles
-        const weatherCodeDescriptions = {
-            0: "Ciel clair",
-            1: "Principalement clair",
-            2: "Partiellement nuageux",
-            3: "Couvert",
-            45: "Brouillard",
-            48: "Brouillard givrant",
-            51: "Bruine légère",
-            53: "Bruine modérée",
-            55: "Bruine dense",
-            56: "Bruine verglaçante légère",
-            57: "Bruine verglaçante dense",
-            61: "Pluie légère",
-            63: "Pluie modérée",
-            65: "Pluie forte",
-            66: "Pluie verglaçante légère",
-            67: "Pluie verglaçante forte",
-            71: "Neige faible",
-            73: "Neige modérée",
-            75: "Neige forte",
-            77: "Grains de neige",
-            80: "Averses légères",
-            81: "Averses modérées",
-            82: "Averses violentes",
-            85: "Averses de neige légères",
-            86: "Averses de neige fortes",
-            95: "Orage léger ou modéré",
-            96: "Orage avec grêle légère",
-            99: "Orage avec grêle forte"
-
-        };
-
-        // Fonction pour mettre à jour la météo
-        async function updateWeather() {
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=` + latitude + `&longitude=` + longitude + `&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m`;
-
-            const response = await fetch(url);
-            const data = await response.json();
-            // console.log(data);
-            // Mettre à jour les éléments de la carte météo
-            // document.querySelector('.temperature').textContent = Math.round(data.current_weather.temperature) + '°C';
-            $('.temperature').empty();
-            $('.temperature').append(data.current_weather.temperature + '°C');
-
-            // document.querySelector('.condition').textContent = weatherCodeDescriptions[data.current_weather.weathercode]; // Utiliser le mapping
-            $('.condition').empty();
-            $('.condition').append(weatherCodeDescriptions[data.current_weather.weathercode]);
-
-            $('.additional-info :nth-child(1)').empty();
-            $('.additional-info').prepend('<i class="material-icons-round">air</i> Vent: ' + data.current_weather.windspeed + ' km/h');
-
-            // document.querySelector('.additional-info :nth-child(2)').textContent = `Humidité: ${data.hourly.relativehumidity_2m[0]}`;
-            $('.additional-info :nth-child(2)').empty();
-            $('.additional-info').append('<i class="material-icons-round">opacity</i> Humidité:' + data.hourly.relativehumidity_2m[0] + '%');
-            // console.log(data.hourly.relativehumidity_2m[0]);
-
         }
 
-        // Appeler la fonction pour mettre à jour la météo au chargement de la page
-        updateWeather();
+        const categoryBtns = categoryList.querySelectorAll('button');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.dataset.category;
 
-        // Gestion du téléchargement PDF (amélioré)
-        const downloadPDFBtn = document.getElementById('downloadPDF');
-        downloadPDFBtn.addEventListener('click', () => {
-            // Récupère toutes les cartes de profil visibles
-            const profileCards = trombinoscope.querySelectorAll('.profile-card:not(.fade-leave-to)');
+                // Animation de disparition
+                const cards = document.querySelectorAll('.card');
+                cards.forEach((card, i) => {
+                    setTimeout(() => {
+                        card.classList.remove('visible');
+                    }, i * 50);
+                });
 
-            // Crée une nouvelle fenêtre avec le contenu du trombinoscope
-            const newWindow = window.open('', '', 'width=800,height=600');
+                // Charger les nouveaux profils après l'animation de sortie
+                setTimeout(() => {
+                    loadProfiles(category);
+                }, cards.length * 50 + 300);
 
-            // Construit le contenu HTML du PDF en utilisant les cartes de profil
-            let pdfContent = `
-                <html>
-                <head>
-                    <title>Trombinoscope</title>
-                    <style>
-                        body {
-                            background-image: url('mairie.jpeg'); /* Image de fond pour le PDF */
-                            background-size: cover; /* Couvre tout l'arrière-plan */
-                            background-repeat: no-repeat;
-                        }
-                        .profile-card { 
-                            text-align: center; 
-                            padding: 15px; 
-                            width: calc(100% / 6 - 12px);
-                            box-sizing: border-box; 
-                            margin: 6px; 
-
-                            border-radius: 20px; 
-                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-                            background-color: #f8f9faab; 
-                            color: #1f1f1f; 
-                            transition: transform 0.3s ease-in-out;
-
-                            position: relative; /* Pour positionner l'image de fond */
-                            overflow: hidden; 
-                        }
-                        .profile-card::before { 
-                            content: '';
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            width: 100%;
-                            height: 50px; /* Ajustez la hauteur de la bande selon vos besoins */
-                            background-image: url('bande.jpg'); 
-                            background-size: cover;
-                            background-position: center;
-                            z-index: -1; 
-                        }
-
-                        .profile-card img { width: 100%; border-radius: 50%; margin-bottom: 10px; }
-                        .profile-card h3 { font-size: 1.25rem; font-weight: 600; }
-                        .profile-card p { font-size: 0.875rem; color: #6c757d; }
-
-                        .profile-card .profile-image { opacity: 1 !important; } 
-                        .profile-card .profile-info { opacity: 1 !important; }
-                        .profile-card video { display: none !important; } 
-
-                        /* ... autres styles nécessaires ... */
-                    </style>
-                </head>
-                <body>
-                    <div style="display: flex; flex-wrap: wrap;"> 
-            `;
-
-            profileCards.forEach(card => {
-                const cardWithoutVideo = card.cloneNode(true);
-                cardWithoutVideo.querySelector('video')?.remove();
-                pdfContent += cardWithoutVideo.outerHTML;
             });
-
-            pdfContent += `</div></body></html>`;
-
-            newWindow.document.write(pdfContent);
-            newWindow.print();
         });
 
+        // Appel initial pour définir le bouton "Tous" comme actif au chargement de la page
+        updateActiveCategoryButton();
 
-        // Ferme la nouvelle fenêtre après l'impression (facultatif)
-        newWindow.close();
+        function animateCards() {
+            const allCards = document.querySelectorAll('.card');
+            const cardsToAnimate = [];
+            const allCardsArray = Array.from(allCards);
+            // Sélectionner 4 cartes aléatoires
+            while (cardsToAnimate.length < 4 && allCardsArray.length > 0) {
+                const randomIndex = Math.floor(Math.random() * allCardsArray.length);
+                cardsToAnimate.push(allCardsArray[randomIndex]);
+                allCardsArray.splice(randomIndex, 1);
+            }
 
+            // Animer les cartes sélectionnées avec un léger délai entre chaque
+            cardsToAnimate.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('hovered'); // Simuler le hover
+                    setTimeout(() => {
+                        card.classList.remove('hovered');
+                    }, 5000); // Durée de l'animation (ajuster si besoin)
+                }, index * 1000); // Délai entre chaque animation
+            });
+            console.log("animateCards function called"); // Vérifier si la fonction est appelée
+            console.log("Cards to animate:", cardsToAnimate); // Vérifier les cartes sélectionnées
+
+            // Répéter l'animation après un certain temps
+            setTimeout(animateCards, 5000); // Intervalle entre les groupes d'animation (ajuster si besoin)
+        }
+        // Ajouter la classe CSS "hovered"
+        const style = document.createElement('style');
+        style.textContent = `
+      .card.hovered .card-inner {
+        transform: translateY(-110%); 
+      }
+    `;
+        document.head.appendChild(style);
+
+        // Démarrer l'animation initiale après que le DOM soit chargé
+        document.addEventListener('DOMContentLoaded', (event) => {
+            animateCards();
+        });
     </script>
 </body>
 
