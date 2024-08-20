@@ -305,43 +305,6 @@
     </div>
 
     <script>
-
-        // Fonction pour vider les cookies
-        function clearCookies() {
-            const cookies = document.cookie.split(";");
-
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i];
-                const eqPos = cookie.indexOf("=");
-                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-            }
-        }
-
-        // Fonction pour vider le cache
-        function clearCache() {
-            if ('caches' in window) {
-                caches.keys().then(function (cacheNames) {
-                    cacheNames.forEach(function (cacheName) {
-                        caches.delete(cacheName);
-                    });
-                });
-            }
-        }
-
-        // Fonction pour réinitialiser automatiquement les données à chaque chargement de page
-        function resetSiteAutomatically() {
-            clearCookies();
-            clearCache();
-
-            // Recharger la page après la réinitialisation (optionnel)
-            // window.location.reload(true);  // Décommenter si vous voulez recharger la page après la réinitialisation
-        }
-
-        // Exécuter la réinitialisation automatique lorsque la page se charge
-        window.onload = resetSiteAutomatically;
-
-
         // Ajoutez cette variable au début du script
         let currentCategory = 'all';
         // Mode sombre
