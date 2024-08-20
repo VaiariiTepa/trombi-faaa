@@ -305,6 +305,43 @@
     </div>
 
     <script>
+
+        // Fonction pour vider les cookies
+        function clearCookies() {
+            const cookies = document.cookie.split(";");
+
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i];
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+            }
+        }
+
+        // Fonction pour vider le cache
+        function clearCache() {
+            if ('caches' in window) {
+                caches.keys().then(function (cacheNames) {
+                    cacheNames.forEach(function (cacheName) {
+                        caches.delete(cacheName);
+                    });
+                });
+            }
+        }
+
+        // Fonction pour réinitialiser automatiquement les données à chaque chargement de page
+        function resetSiteAutomatically() {
+            clearCookies();
+            clearCache();
+
+            // Recharger la page après la réinitialisation (optionnel)
+            // window.location.reload(true);  // Décommenter si vous voulez recharger la page après la réinitialisation
+        }
+
+        // Exécuter la réinitialisation automatique lorsque la page se charge
+        window.onload = resetSiteAutomatically;
+
+
         // Ajoutez cette variable au début du script
         let currentCategory = 'all';
         // Mode sombre
@@ -355,18 +392,31 @@
             { name: "Audrey Moreau", job: "Psychologue du travail", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1990-04-09" }
         ];
 
-        function getDaysUntilBirthday(birthday) {
+
+        function getTimeUntilBirthday(birthday) {
             const today = new Date();
             const birthDate = new Date(birthday);
-            const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            let nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
 
             if (nextBirthday < today) {
                 nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
             }
 
-            const diffTime = Math.abs(nextBirthday - today);
+            const diffTime = nextBirthday - today;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
+
+            const months = Math.floor(diffDays / 30);
+            const remainingDays = diffDays % 30;
+
+            if (months === 0 && remainingDays === 0) {
+                return "C'est aujourd'hui !";
+            } else if (months === 0) {
+                return `Encore ${remainingDays} jour${remainingDays > 1 ? 's' : ''}`;
+            } else if (remainingDays === 0) {
+                return `Encore ${months} mois`;
+            } else {
+                return `Encore ${months} mois et ${remainingDays} jour${remainingDays > 1 ? 's' : ''}`;
+            }
         }
 
         function isBirthday(birthday) {
@@ -441,10 +491,10 @@
 
                 const birthdayCounter = document.createElement('div');
                 birthdayCounter.classList.add('birthday-counter');
-                const daysUntilBirthday = getDaysUntilBirthday(profile.birthday);
+                const timeUntilBirthday = getTimeUntilBirthday(profile.birthday);
                 birthdayCounter.textContent = isBirthdayToday
                     ? "Joyeux anniversaire !"
-                    : `Encore ${daysUntilBirthday} jour${daysUntilBirthday > 1 ? 's' : ''}`;
+                    : timeUntilBirthday;
                 cardBack.appendChild(birthdayCounter);
 
                 cardInner.appendChild(cardFront);
