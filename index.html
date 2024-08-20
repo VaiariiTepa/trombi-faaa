@@ -7,7 +7,6 @@
     <title>Trombi-faaa</title>
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.tailwindcss.com/"> -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;700&family=Lato:ital,wght@0,400;1,400&display=swap"
@@ -71,7 +70,6 @@
             font-size: 40px;
         }
 
-
         .category-list {
             position: fixed;
             bottom: 80px;
@@ -87,7 +85,6 @@
 
         .category-list.open {
             max-height: 300px;
-            /* Ajustez cette valeur selon le nombre de catégories */
             transition: max-height 0.5s ease-in;
         }
 
@@ -122,7 +119,6 @@
             overflow: hidden;
             height: 250px;
             opacity: 0;
-            /* transform: translateY(20px); */
             transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
             perspective: 1000px;
             cursor: pointer;
@@ -144,7 +140,6 @@
         }
 
         .card:hover .card-inner {
-            /* transform: rotateY(180deg); */
             transform: translateY(-110%);
         }
 
@@ -162,15 +157,12 @@
 
         .card-front {
             transition: transform 0.3s ease;
-            /* Ajoute une transition pour un effet fluide */
         }
-
 
         .card-back {
             border-radius: 12px;
             background-color: #1da1f2;
             color: white;
-            /* transform: rotateY(180deg); */
             transform: translateY(110%);
         }
 
@@ -194,21 +186,29 @@
             color: #777;
         }
 
-        @keyframes tileAnimation {
+        .birthday-counter {
+            margin-top: 10px;
+            font-size: 14px;
+        }
 
-            0%,
-            100% {
-                transform: scale(1);
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
             }
 
             50% {
-                transform: scale(1.05);
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
             }
         }
 
-        .card:hover .card-front {
-            transform: translateY(-33%);
-            /* Soulève la carte d'un tiers vers le haut */
+        .birthday-card {
+            background: linear-gradient(45deg, #1df27d, #e8e000, #005f9e);
+            background-size: 200% 200%;
+            animation: gradientAnimation 2s ease infinite;
         }
 
         .dark-mode {
@@ -220,32 +220,47 @@
             background-color: #1f1f1f86;
         }
 
-        /* .dark-mode .material-icons-round {
-            color: #1DA1F2;
-        } */
-
         .dark-mode .card-back .profile-name,
         .dark-mode .card-front .profile-job {
             color: #f0f0f0;
-            /* Ou une autre couleur claire de votre choix */
         }
 
         #darkOverlay {
             display: none;
-            /* Masqué par défaut */
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            /* Noir avec 50% d'opacité */
             z-index: -1;
         }
 
         .dark-mode #darkOverlay {
             display: block;
-            /* Affiché en mode sombre */
+        }
+
+        .birthday-today {
+            background: linear-gradient(45deg, #1df27d, #e8e000, #005f9e);
+            background-size: 200% 200%;
+            animation: gradientAnimation 2s ease infinite;
+        }
+
+        .birthday-month {
+            background-color: #f8d7da;
+        }
+
+        .birthday-badge {
+            position: relative;
+            top: -3px;
+            left: 10px;
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
         }
     </style>
 </head>
@@ -285,9 +300,13 @@
         <button data-category="marketing">Marketing</button>
         <button data-category="rh">RH</button>
         <button data-category="developpement">Développement</button>
+        <button data-category="birthday">Anniversaire <span id="birthdayCounter"
+                class="birthday-badge">0</span></button>
     </div>
 
     <script>
+        // Ajoutez cette variable au début du script
+        let currentCategory = 'all';
         // Mode sombre
         const toggleDarkMode = document.getElementById('toggleDarkMode');
         toggleDarkMode.addEventListener('click', () => {
@@ -301,51 +320,89 @@
         categoryToggleBtn.addEventListener('click', () => {
             categoryList.classList.toggle('open');
         });
-        
-        categoryList.addEventListener('click',()=>{
-            categoryList.classList.toggle('open');
 
-        })
+        categoryList.addEventListener('click', () => {
+            categoryList.classList.toggle('open');
+        });
 
         // Trombinoscope dynamique
         const trombinoscope = document.getElementById('trombinoscope');
 
         const profiles = [
-            { name: "Jean Dupont", job: "Développeur Web", photo: "contact1.jpg", category: "developpement" },
-            { name: "Benjamin Curie", job: "Responsable Marketing", photo: "contact2.jpg", category: "marketing" },
-            { name: "Alex Martin", job: "Spécialiste RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
-            { name: "Sophie Lefebvre", job: "Développeuse Front-end", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
-            { name: "Pierre Dubois", job: "Analyste Marketing", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
-            { name: "Julie Bernard", job: "Gestionnaire de paie", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
-            { name: "Thomas Durand", job: "Développeur Back-end", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
-            { name: "Émilie Rousseau", job: "Responsable Communication", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
-            { name: "Lucas Moreau", job: "Recruteur", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
-            { name: "Isabelle Dubois", job: "Développeuse Full-stack", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
-            { name: "Victor Hugo", job: "Chef de projet Marketing", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
-            { name: "Claire Moreau", job: "Directrice RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
-            { name: "Paul Valéry", job: "Ingénieur DevOps", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
-            { name: "Sarah Reynaud", job: "Chargée de communication", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
-            { name: "Antoine Leclerc", job: "Assistant RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
-            { name: "Lucie Dubois", job: "Développeuse Mobile", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
-            { name: "David Martin", job: "Analyste SEO", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
-            { name: "Camille Bernard", job: "Responsable Formation", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
-            { name: "François Lefèvre", job: "Architecte logiciel", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
-            { name: "Laura Rousseau", job: "Community Manager", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
-            { name: "Olivier Durand", job: "Consultant RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" },
-            { name: "Emma Robert", job: "Data Scientist", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement" },
-            { name: "Mathieu Petit", job: "Spécialiste Paid Ads", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing" },
-            { name: "Audrey Moreau", job: "Psychologue du travail", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh" }
+            { name: "Jean Dupont", job: "Développeur Web", photo: "contact1.jpg", category: "developpement", birthday: "1990-05-15" },
+            { name: "Benjamin Curie", job: "Responsable Marketing", photo: "contact2.jpg", category: "marketing", birthday: "1985-09-22" },
+            { name: "Alex Martin", job: "Spécialiste RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1988-03-10" },
+            { name: "Sophie Lefebvre", job: "Développeuse Front-end", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement", birthday: "1992-11-28" },
+            { name: "Pierre Dubois", job: "Analyste Marketing", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing", birthday: "1987-07-04" },
+            { name: "Julie Bernard", job: "Gestionnaire de paie", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1991-01-18" },
+            { name: "Thomas Durand", job: "Développeur Back-end", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement", birthday: "1989-06-30" },
+            { name: "Émilie Rousseau", job: "Responsable Communication", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing", birthday: "1993-12-05" },
+            { name: "Lucas Moreau", job: "Recruteur", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1986-08-20" },
+            { name: "Isabelle Dubois", job: "Développeuse Full-stack", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement", birthday: "1994-02-14" },
+            { name: "Victor Hugo", job: "Chef de projet Marketing", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing", birthday: "1984-10-09" },
+            { name: "Claire Moreau", job: "Directrice RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1982-04-25" },
+            { name: "Paul Valéry", job: "Ingénieur DevOps", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement", birthday: "1990-07-12" },
+            { name: "Sarah Reynaud", job: "Chargée de communication", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing", birthday: "1995-03-30" },
+            { name: "Antoine Leclerc", job: "Assistant RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1993-09-08" },
+            { name: "Lucie Dubois", job: "Développeuse Mobile", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement", birthday: "1994-08-30" },
+            { name: "David Martin", job: "Analyste SEO", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing", birthday: "1988-05-17" },
+            { name: "Camille Bernard", job: "Responsable Formation", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1987-11-03" },
+            { name: "François Lefèvre", job: "Architecte logiciel", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement", birthday: "1986-02-28" },
+            { name: "Laura Rousseau", job: "Community Manager", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing", birthday: "1994-08-25" },
+            { name: "Olivier Durand", job: "Consultant RH", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1989-01-07" },
+            { name: "Emma Robert", job: "Data Scientist", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "developpement", birthday: "1992-06-22" },
+            { name: "Mathieu Petit", job: "Spécialiste Paid Ads", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "marketing", birthday: "1993-10-15" },
+            { name: "Audrey Moreau", job: "Psychologue du travail", photo: "https://via.placeholder.com/150x150.png?text=Photo", category: "rh", birthday: "1990-04-09" }
         ];
+
+        function getDaysUntilBirthday(birthday) {
+            const today = new Date();
+            const birthDate = new Date(birthday);
+            const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+
+            if (nextBirthday < today) {
+                nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+            }
+
+            const diffTime = Math.abs(nextBirthday - today);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function isBirthday(birthday) {
+            const today = new Date();
+            const birthDate = new Date(birthday);
+            return today.getMonth() === birthDate.getMonth() && today.getDate() === birthDate.getDate();
+        }
+
+        function isBirthdayMonth(birthday) {
+            const today = new Date();
+            const birthDate = new Date(birthday);
+            return today.getMonth() === birthDate.getMonth();
+        }
 
         function loadProfiles(category = 'all') {
             currentCategory = category;
+            const trombinoscope = document.getElementById('trombinoscope');
+            trombinoscope.innerHTML = '';
             const fragment = document.createDocumentFragment();
-            const filteredProfiles = category === 'all' ? profiles : profiles.filter(profile => profile.category === category);
+            let birthdayCount = 0;
+
+            const today = new Date();
+
+            const filteredProfiles = profiles.filter(profile => {
+                const birthDate = new Date(profile.birthday);
+                const isToday = birthDate.getDate() === today.getDate() && birthDate.getMonth() === today.getMonth();
+                const isSameMonthAndNotPassed = birthDate.getMonth() === today.getMonth() && birthDate.getDate() >= today.getDate();
+
+                if (category === 'all') return true;
+                if (category === 'birthday') return isToday || isSameMonthAndNotPassed;
+                return profile.category === category;
+            });
 
             filteredProfiles.forEach((profile, i) => {
                 const cardDiv = document.createElement('div');
                 cardDiv.classList.add('card', 'profile-card');
-                // cardDiv.setAttribute('key', i);
 
                 const cardInner = document.createElement('div');
                 cardInner.classList.add('card-inner');
@@ -360,6 +417,7 @@
                 img.loading = 'lazy';
                 cardFront.appendChild(img);
 
+
                 const jobDiv = document.createElement('div');
                 jobDiv.classList.add('profile-job');
                 jobDiv.textContent = profile.job;
@@ -373,26 +431,42 @@
                 nameDiv.textContent = profile.name;
                 cardBack.appendChild(nameDiv);
 
+                const isBirthdayToday = isBirthday(profile.birthday);
+                if (isBirthdayToday) {
+                    cardBack.classList.add('birthday-today');
+                    birthdayCount++;
+                } else if (isBirthdayMonth(profile.birthday)) {
+                    cardBack.classList.add('birthday-month');
+                }
+
+                const birthdayCounter = document.createElement('div');
+                birthdayCounter.classList.add('birthday-counter');
+                const daysUntilBirthday = getDaysUntilBirthday(profile.birthday);
+                birthdayCounter.textContent = isBirthdayToday
+                    ? "Joyeux anniversaire !"
+                    : `Encore ${daysUntilBirthday} jour${daysUntilBirthday > 1 ? 's' : ''}`;
+                cardBack.appendChild(birthdayCounter);
+
                 cardInner.appendChild(cardFront);
                 cardInner.appendChild(cardBack);
                 cardDiv.appendChild(cardInner);
                 fragment.appendChild(cardDiv);
-            });
+                trombinoscope.appendChild(cardDiv);
 
-            trombinoscope.innerHTML = '';
-            trombinoscope.appendChild(fragment);
-
-            // Animation d'apparition
-            const cards = document.querySelectorAll('.card');
-            cards.forEach((card, i) => {
                 setTimeout(() => {
-                    card.classList.add('visible');
-                }, i * 100); // Délai progressif pour chaque carte
+                    cardDiv.classList.add('visible');
+                }, i * 100);
             });
-                        // Mise à jour de l'apparence du bouton de catégorie actif
-                        updateActiveCategoryButton();
+
+            updateActiveCategoryButton();
+            updateBirthdayCounter(birthdayCount);
         }
-        loadProfiles();
+
+        function updateBirthdayCounter(count) {
+            const counter = document.getElementById('birthdayCounter');
+            counter.textContent = count;
+            counter.style.display = count > 0 ? 'inline' : 'none';
+        }
 
         function updateActiveCategoryButton() {
             const categoryBtns = categoryList.querySelectorAll('button');
@@ -422,7 +496,6 @@
                 setTimeout(() => {
                     loadProfiles(category);
                 }, cards.length * 50 + 300);
-
             });
         });
 
@@ -449,23 +522,23 @@
                     }, 5000); // Durée de l'animation (ajuster si besoin)
                 }, index * 1000); // Délai entre chaque animation
             });
-            console.log("animateCards function called"); // Vérifier si la fonction est appelée
-            console.log("Cards to animate:", cardsToAnimate); // Vérifier les cartes sélectionnées
 
             // Répéter l'animation après un certain temps
             setTimeout(animateCards, 5000); // Intervalle entre les groupes d'animation (ajuster si besoin)
         }
+
         // Ajouter la classe CSS "hovered"
         const style = document.createElement('style');
         style.textContent = `
-      .card.hovered .card-inner {
-        transform: translateY(-110%); 
-      }
-    `;
+            .card.hovered .card-inner {
+                transform: translateY(-110%); 
+            }
+        `;
         document.head.appendChild(style);
 
         // Démarrer l'animation initiale après que le DOM soit chargé
         document.addEventListener('DOMContentLoaded', (event) => {
+            loadProfiles(); // Charger tous les profils initialement
             animateCards();
         });
     </script>
